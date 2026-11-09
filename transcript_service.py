@@ -179,14 +179,19 @@ def execute(job):
 def start():
     data=request.get_json(silent=True) or {}
     url=str(data.get("url") or "").strip()
-    from web_app import validate_url, DEFAULT_FOLDER
-    if not validate_url(url):
+    from urllib.parse import urlsplit
+    try:
+        parsed = urlsplit(url)
+        good = parsed.scheme in ("http", "https") and bool(parsed.hostname) and not parsed.username and not parsed.password and len(url) <= 2048
+    except ValueError:
+        good = False
+    if not good:
         return jsonify(error="Liên kết không hợp lệ."),400
     lang=str(data.get("language") or "vi")
     mode=str(data.get("mode") or "auto")
     if lang not in LANGS or mode not in MODES:
         return jsonify(error="Lựa chọn nhận dạng không hợp lệ."),400
-    folder=str(data.get("folder") or DEFAULT_FOLDER).strip()
+    folder=str(data.get("folder") or (Path.home() / "Downloads")).strip()
     if len(folder)>800:
         return jsonify(error="Đường dẫn quá dài."),400
     with LOCK:
