@@ -56,3 +56,8 @@ Sau khi `git pull origin main`, mở thư mục dự án `VideoSaverVN-Online` b
 Từ lần sau, nhấp đúp **VideoSaver VN** ngoài Desktop sẽ chạy `web_app.py` và tự mở trang localhost trên trình duyệt. Giữ cửa sổ dòng lệnh mở để server tiếp tục hoạt động; đóng bằng Ctrl+C hoặc đóng cửa sổ đó. Nếu ứng dụng đã chạy, không cần nhấp lần nữa — chỉ mở tab web hiện tại.
 
 Không cần cài lại Python/FFmpeg nếu đã cài xong. **Không di chuyển hoặc xóa thư mục dự án** sau khi tạo shortcut; nếu chuyển vị trí thư mục, chạy lại `Create-Desktop-Icon.cmd` từ thư mục mới. Script không yêu cầu quyền Administrator.
+
+
+## Biểu tượng mới cho Windows
+
+Bộ cài shortcut nay có biểu tượng riêng: nền gradient xanh/tím, nút Play và mũi tên tải xuống màu cyan. Trong thư mục dự án, chạy lại **Create-Desktop-Icon.cmd** sau khi cập nhật bằng `git pull origin main`. Script sẽ tạo `VideoSaverVN.ico` nhiều kích cỡ và thay icon của shortcut `VideoSaver VN.lnk` trên Desktop. Nếu Windows vẫn hiển thị biểu tượng cũ, hãy làm mới Desktop (F5) hoặc đăng xuất và đăng nhập lại.
