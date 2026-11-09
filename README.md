@@ -1,59 +1,40 @@
-# VideoSaver VN 3.0 — Local Web Download Manager
+# VideoSaver VN 4.0
 
-Ứng dụng tải video về máy Windows với giao diện web tiếng Việt, chạy **cục bộ** (Flask + yt-dlp + FFmpeg).
+Ứng dụng **web chạy nội bộ trên Windows** để tải video và trích xuất văn bản. Backend Python + Flask + yt-dlp, tùy chọn faster-whisper chạy CPU.
 
-## Có gì mới trong v3
+## Giao diện mới
 
-- Dashboard responsive, gọn hơn, có font Unicode và thông báo tiếng Việt.
-- **Phân tích video**: tên video, kênh đăng, thumbnail, thời lượng và các độ phân giải do nguồn cung cấp.
-- Chọn tối đa 144p, 240p, 360p, 480p, 720p, 1080p, 1440p, 2160p hoặc tốt nhất; MP3/M4A/Opus.
-- **Hàng đợi**: thêm nhiều URL, tải lần lượt, hủy từng lượt, hiển thị phần trăm, tốc độ và ETA khi nguồn cung cấp.
-- **Lịch sử** lưu dưới `%USERPROFILE%\.videosavervn\history.json`; trạng thái tải gián đoạn được đánh dấu khi mở lại.
-- **Chọn thư mục** bằng hộp thoại Windows hoặc nhập đường dẫn.
-- **Tự chọn cổng khả dụng**: ưu tiên 5000, 8765, 5080 rồi cổng ngẫu nhiên nếu cần.
-- Nhật ký lỗi được thu gọn. Bản Tkinter cũ vẫn ở `app.py`.
+Bốn trang điều hướng không cần cuộn qua mọi chức năng:
+1. **Tải video** — dán URL, phân tích tiêu đề/thumbnail/độ phân giải, chọn chất lượng, thêm vào hàng đợi, xem lượt tải hiện tại.
+2. **Lấy văn bản** — phụ đề có sẵn hoặc AI Whisper, lựa chọn tiếng Việt/Anh/tự động và mô hình tiny/base/small/medium; xem nội dung TXT, sao chép, lưu TXT/SRT.
+3. **Lịch sử** — danh sách tải kèm trạng thái, số lượt chờ/tải/thành công, lỗi và nút hủy.
+4. **Cài đặt** — chọn thư mục mặc định, kiểm tra FFmpeg, xem nhật ký kỹ thuật.
 
-## Cập nhật trên Windows
+Các lượt tải video được lưu ở \`%USERPROFILE%\.videosavervn\history.json\`. Kết quả TXT và SRT lưu tại thư mục người dùng đã chọn. Lịch sử nhận dạng hiện chỉ tồn tại trong phiên chạy; chưa có tính năng tiếp tục nhận dạng khi tắt máy.
 
-Đóng cửa sổ chương trình cũ (nhấn Ctrl+C trong PowerShell đang chạy Flask) rồi mở PowerShell:
+## Cập nhật Windows
 
-```powershell
-cd "$env:USERPROFILE\Downloads\VideoSaverVN-Online"
-git pull origin main
-py -m pip install -r requirements.txt
-py web_app.py
-```
-
-Địa chỉ chính xác được in trong PowerShell và trình duyệt sẽ được mở tự động. Thường là http://127.0.0.1:5000. **Không được mở chương trình cũ cùng lúc trên cùng cổng.** Nếu `git pull` báo có thay đổi cục bộ ở `web_app.py` (do bạn đã đổi cổng 8765 sang 5000 trước đây), chạy `git restore web_app.py` **chỉ khi bạn không cần giữ chỉnh sửa cục bộ**, rồi `git pull origin main`.
-
-Nếu FFmpeg thiếu, cài `winget install Gyan.FFmpeg` rồi khởi động lại PowerShell. Nếu YouTube thiếu môi trường JS:
-
-```powershell
-winget install DenoLand.Deno
-py -m pip install -U "yt-dlp[default]"
-```
-
-## Lưu ý
-
-Phân tích video cần kết nối Internet và nguồn được yt-dlp hỗ trợ; có những video không thể phân tích hoặc tải. Chỉ tải nội dung sở hữu hoặc được phép lưu; không hỗ trợ DRM, nội dung riêng tư hay vượt quyền truy cập.
-
-Bản này **chưa kiểm thử tải thực tế trên máy Windows của người dùng**. Hãy báo lỗi kèm nhật ký ở trang web nếu gặp sự cố.
-
-
-## Lấy văn bản từ video (v3.1)
-
-Trên giao diện, dán URL → chọn **Lấy văn bản từ video** → ngôn ngữ và phương pháp → **Lấy văn bản**.
-
-- **Chỉ phụ đề**: lấy subtitle do người đăng cung cấp hoặc subtitle tự động. Không yêu cầu Whisper.
-- **AI (CPU)**: tải luồng âm thanh rồi chạy mô hình faster-whisper \`small\` ở chế độ int8. File TXT (văn bản) và SRT (phụ đề có thời gian) nằm ở thư mục lưu đã chọn.
-- **Tự động**: dùng phụ đề trước, nếu không có thì chuyển sang AI. Nếu chưa cài faster-whisper, sẽ hiển thị thông báo cài đặt rõ ràng.
-
-Để dùng nhận dạng lời nói bằng AI, cài thêm:
+Đóng chương trình cũ bằng Ctrl+C trong PowerShell trước khi chạy lệnh:
 
 \`\`\`powershell
+cd "$env:USERPROFILE\Downloads\VideoSaverVN-Online"
+git pull origin main
 py -m pip install -r requirements-transcription.txt
+py web_app.py
 \`\`\`
 
-Mô hình Whisper được tải về lần đầu khi sử dụng, sau đó lưu cache trên máy. CPU có thể xử lý chậm với video dài. Cần FFmpeg và kết nối Internet khi tải video hoặc tải mô hình lần đầu. Văn bản do AI tạo có thể sai, đặc biệt với âm thanh nhiễu hoặc tên riêng.
+Ứng dụng tự mở trình duyệt tại địa chỉ localhost được in trong PowerShell (thường là http://127.0.0.1:5000). Nếu Git báo file bị sửa cục bộ, có thể chạy \`git stash push -m "Backup before update"\`, rồi \`git pull origin main\`. Chỉ làm như vậy nếu bạn muốn tạm giữ các thay đổi thay vì ghi đè.
 
-**Chú ý:** Việc lấy văn bản hiện xử lý một video mỗi lần, và tác vụ sẽ không tự tiếp tục nếu bạn tắt ứng dụng giữa chừng. Hàng đợi tải video thông thường vẫn hoạt động độc lập. Những video không có lời nói hoặc không có phụ đề không thể tạo ra văn bản có ý nghĩa.
+Cần **FFmpeg** để ghép hình/tiếng và xử lý audio: \`winget install Gyan.FFmpeg\`. Nếu YouTube báo thiếu JavaScript runtime: \`winget install DenoLand.Deno\` và \`py -m pip install -U "yt-dlp[default]"\`. Đóng và mở lại PowerShell sau khi cài những công cụ này.
+
+Whisper dùng CPU, tải mô hình từ mạng trong lần sử dụng đầu tiên; mô hình lớn có thể tốn RAM và rất chậm. Chế độ **Chỉ phụ đề** chạy nhanh hơn nếu video có phụ đề ngôn ngữ đã chọn. Nếu phụ đề không có, nút thử Whisper xuất hiện; chế độ Tự động cũng thử AI khi không lấy được phụ đề.
+
+## Hạn chế
+
+- Video từ các website thay đổi liên tục; không phải link nào cũng tải/phân tích được.
+- Tải video theo hàng đợi tuần tự; lấy văn bản xử lý một video mỗi lần.
+- Tiến độ đầu quá trình là theo **trạng thái**; một số nguồn không cung cấp kích thước/ETA.
+- Chưa kiểm thử tích hợp trên Windows thật. Cần kiểm tra tải, nhận dạng và giao diện trực tiếp.
+- Chỉ tải tài liệu bạn sở hữu hoặc có quyền lưu. Không vượt DRM hoặc quyền truy cập.
+
+Bản Tkinter cũ vẫn còn ở \`app.py\` nếu cần quay lại.
