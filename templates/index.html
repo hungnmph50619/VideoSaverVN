@@ -65,6 +65,13 @@ pre{white-space:pre-wrap;word-break:break-word;font-size:11px;line-height:1.7;co
 </section>
 <section id="page-transcript" class="view">
 <div class="head"><div><h1>Lấy văn bản từ video</h1><p class="sub">Lấy phụ đề nhanh hoặc dùng AI nhận dạng lời nói, lưu TXT và SRT.</p></div><span class="tag">Whisper · CPU</span></div>
+<div class="card"><div class="cardhead"><h2>🎙 Chuyển file ghi âm thành văn bản</h2><span class="muted">MP3 · M4A · WAV · FLAC · MP4</span></div>
+<p class="sub" style="margin-bottom:16px">Chọn file trên máy tính. Whisper chạy trên CPU và xuất cả TXT lẫn SRT. File tối đa 250 MB.</p>
+<label for="audioFile">File ghi âm / video từ máy</label>
+<input type="file" id="audioFile" accept=".mp3,.m4a,.wav,.mp4,.webm,.ogg,.flac,.aac,.wma,.opus,.mov,.mkv,audio/*,video/*">
+<div class="grid"><div><label for="audioLang">Ngôn ngữ</label><select id="audioLang"><option value="vi">Tiếng Việt</option><option value="en">Tiếng Anh</option><option value="auto">Tự nhận diện</option></select></div><div><label for="audioModel">Mô hình</label><select id="audioModel"><option value="tiny">Tiny — nhanh nhất</option><option value="base">Base — nhanh</option><option value="small" selected>Small — cân bằng</option><option value="medium">Medium — chậm hơn, chính xác hơn trong một số trường hợp</option></select></div></div>
+<div class="actions"><button class="mainbtn" id="uploadText">↑ Chuyển file thành văn bản</button></div>
+<p class="note" id="uploadMessage">Sau khi xử lý, dùng khung Kết quả bên dưới để xem và sao chép nội dung.</p></div>
 <div class="card"><div class="cardhead"><h2>Chuyển video thành văn bản</h2><span class="muted">Không cần tải video thủ công trước</span></div>
 <label for="textUrl">Liên kết video</label><input id="textUrl" placeholder="Dán liên kết video..." type="url">
 <div class="grid"><div><label for="textMode">Phương pháp</label><select id="textMode"><option value="auto">Tự động — phụ đề trước, Whisper nếu cần</option><option value="subtitles">Chỉ trích xuất phụ đề (nhanh nhất)</option><option value="speech">Nhận dạng lời nói bằng Whisper (CPU)</option></select></div><div><label for="textLang">Ngôn ngữ</label><select id="textLang"><option value="vi">Tiếng Việt</option><option value="en">Tiếng Anh</option><option value="auto">Tự nhận diện / ngôn ngữ có sẵn</option></select></div></div>
@@ -116,6 +123,28 @@ const stateLabels={waiting:"Đang chờ lượt tải",downloading:"Đang tải 
 function taskCard(t){const wrap=node("div","task"),image=safeImage(t.thumbnail);if(image){const img=node("img");img.src=image;img.alt="";wrap.append(img)}else{wrap.append(node("div","icon","▶"))}const middle=node("div");const title=node("div","tasktitle",t.title||t.url);title.title=t.title||t.url;let info=stateLabels[t.status]||t.status;if(t.speed)info+=" · "+t.speed+" MB/s";if(Number.isFinite(t.eta))info+=" · còn "+Math.ceil(t.eta)+" giây";if(t.error)info+=" · "+t.error;const sub=node("div","taskmeta",info);middle.append(title,sub);if(["downloading","processing","done"].includes(t.status)){const bar=node("div","bar");const fill=node("span");fill.style.width=(t.progress||0)+"%";bar.append(fill);middle.append(bar)}const right=node("div","taskright");right.append(node("span","tag",t.status==="waiting"?"Đang chờ":t.status==="processing"?"Xử lý":t.status==="downloading"?(t.progress||0).toFixed(0)+"%":stateLabels[t.status]));if(["waiting","downloading","processing"].includes(t.status)){const cancel=node("button","","Hủy");cancel.onclick=async()=>{try{await api("cancel",{id:t.id});refresh()}catch(e){alert(e.message)}};right.append(cancel)}wrap.append(middle,right);return wrap}
 function renderTasks(){const filter=$("taskFilter").value;const active=t=>["waiting","downloading","processing"].includes(t.status);const filtered=tasks.filter(t=>filter==="all"||filter==="active"&&active(t)||filter==="done"&&t.status==="done"||filter==="failed"&&["failed","cancelled","interrupted"].includes(t.status));$("totalCount").textContent=tasks.length;$("activeCount").textContent=tasks.filter(active).length;$("doneCount").textContent=tasks.filter(t=>t.status==="done").length;const all=$("allTasks");all.replaceChildren();if(!filtered.length)all.append(node("div","empty","Chưa có tác vụ ở mục này."));else filtered.forEach(t=>all.append(taskCard(t)));const mini=$("miniTasks");mini.replaceChildren();const current=tasks.filter(active).slice(0,3);if(!current.length)mini.append(node("div","empty","Không có lượt tải đang chờ hoặc đang chạy."));else current.forEach(t=>mini.append(taskCard(t)))}
 async function refresh(){try{const r=await api("state");tasks=r.tasks;renderTasks();$("logs").textContent=r.logs.length?r.logs.join("\n"):"Chưa có sự kiện.";$("health").textContent=r.ffmpeg?"● FFmpeg sẵn sàng":"⚠ Chưa có FFmpeg";$("systemCheck").textContent=r.ffmpeg?"FFmpeg: đã nhận diện.":"FFmpeg: chưa tìm thấy. Hãy cài bằng winget install Gyan.FFmpeg và mở lại PowerShell."}catch(e){$("health").textContent="Không kết nối được máy chủ"}}
+
+$("uploadText").onclick=async()=>{
+const file=$("audioFile").files[0];
+if(!file)return notice("uploadMessage","Hãy chọn file ghi âm trước.",true);
+if(file.size>250*1024*1024)return notice("uploadMessage","File quá 250 MB. Hãy chia nhỏ file.",true);
+const form=new FormData();
+form.append("file",file);form.append("language",$("audioLang").value);
+form.append("model",$("audioModel").value);form.append("folder",$("textFolder").value);
+$("uploadText").disabled=true;
+notice("uploadMessage","Đang gửi file tới bộ xử lý trên máy tính...");
+try{
+const response=await fetch("/api/transcribe-upload",{method:"POST",headers:{"X-VideoSaver-Token":TOKEN},body:form});
+const result=await response.json();
+if(!response.ok)throw Error(result.error||"Không thể đọc file");
+textJob=result.id;recognized="";lastTextData="";
+$("textContent").textContent="Đang xử lý file ghi âm...";
+$("copyText").disabled=true;$("speechFallback").classList.add("hidden");
+$("textState").textContent="Đang xử lý file ghi âm";
+notice("uploadMessage","Đã nhận file. Whisper đang xử lý bằng CPU.");
+}catch(e){notice("uploadMessage",e.message,true)}
+finally{$("uploadText").disabled=false}
+};
 $("startText").onclick=async()=>{const url=$("textUrl").value.trim();if(!url)return notice("textMessage","Hãy nhập liên kết video.",true);try{const r=await api("transcribe",{url,mode:$("textMode").value,language:$("textLang").value,model:$("textModel").value,folder:$("textFolder").value});textJob=r.id;recognized="";lastTextData="";$("textContent").textContent="Đang xử lý...";$("speechFallback").classList.add("hidden");$("copyText").disabled=true;$("startText").disabled=true;notice("textMessage","Đã tạo tác vụ xử lý. Có thể chuyển sang trang khác trong khi ứng dụng đang chạy.")}catch(e){notice("textMessage",e.message,true)}};
 $("tryWhisper").onclick=()=>{$("textMode").value="speech";$("speechFallback").classList.add("hidden");$("startText").click()};
 $("copyText").onclick=async()=>{try{await navigator.clipboard.writeText(recognized);notice("textMessage","Đã sao chép văn bản.")}catch(e){notice("textMessage","Không sao chép được tự động. Bạn có thể chọn nội dung trong ô và nhấn Ctrl+C.",true)}};
