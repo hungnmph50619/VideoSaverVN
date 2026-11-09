@@ -17,6 +17,8 @@ import yt_dlp
 from flask import Flask, jsonify, render_template, request
 
 app = Flask(__name__)
+from transcript_service import transcript_api
+app.register_blueprint(transcript_api)
 app.json.ensure_ascii = False
 TOKEN = secrets.token_urlsafe(32)
 LOCK = threading.RLock()
