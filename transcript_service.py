@@ -15,6 +15,7 @@ transcript_api = Blueprint("transcript_api", __name__)
 JOBS = {}
 LOCK = threading.RLock()
 LANGS = ("vi", "en", "auto")
+MODELS = ("tiny", "base", "small", "medium")
 MODES = ("subtitles", "speech", "auto")
 
 def stamp(seconds):
@@ -86,8 +87,9 @@ def get_subtitles(url, language, temp, job):
     if not info:
         raise RuntimeError("Không lấy được thông tin video.")
     langs = ([language] if language != "auto" else ["vi", "en"])
-    langs += [k for k in (info.get("subtitles") or {}) if k not in langs]
-    langs += [k for k in (info.get("automatic_captions") or {}) if k not in langs]
+    if language == "auto":
+        langs += [k for k in (info.get("subtitles") or {}) if k not in langs]
+        langs += [k for k in (info.get("automatic_captions") or {}) if k not in langs]
     selected = None
     for kind in ("subtitles","automatic_captions"):
         available = info.get(kind) or {}
@@ -99,7 +101,7 @@ def get_subtitles(url, language, temp, job):
         if selected:
             break
     if not selected:
-        raise RuntimeError("Video không có phụ đề khả dụng.")
+        raise RuntimeError("Không tìm thấy phụ đề ở ngôn ngữ đã chọn. Có thể thử nhận dạng giọng nói bằng Whisper.")
     kind, lang = selected
     options = {"quiet":True,"no_warnings":True,"skip_download":True,"noplaylist":True,
                "writesubtitles":kind=="subtitles","writeautomaticsub":kind=="automatic_captions",
@@ -123,7 +125,7 @@ def speech_to_text(url, language, temp, job):
         raise RuntimeError('Chưa cài faster-whisper. Chạy: py -m pip install faster-whisper') from exc
     if not shutil.which("ffmpeg"):
         raise RuntimeError("Không tìm thấy FFmpeg để xử lý âm thanh.")
-    change(job, status="Đang tải âm thanh")
+    change(job, status="Đang tải âm thanh", progress=8)
     with yt_dlp.YoutubeDL({"quiet":True,"no_warnings":True,"format":"bestaudio/best",
                            "noplaylist":True,"outtmpl":str(temp / "audio.%(ext)s")}) as dl:
         info = dl.extract_info(url, download=True)
@@ -133,20 +135,23 @@ def speech_to_text(url, language, temp, job):
     wav = temp / "audio.wav"
     subprocess.run(["ffmpeg","-nostdin","-y","-loglevel","error","-i",str(files[0]),
                     "-vn","-ac","1","-ar","16000",str(wav)],check=True)
-    change(job, status="Đang nhận dạng giọng nói (CPU)")
+    change(job, status="Đang tải hoặc mở mô hình AI", progress=20)
     # Small model balances Vietnamese quality and CPU requirements; no remote transcription API.
-    model = WhisperModel("small", device="cpu", compute_type="int8")
+    model = WhisperModel(job["model"], device="cpu", compute_type="int8")
+    change(job, status="Đang nhận dạng giọng nói (CPU)", progress=30)
     segments, _ = model.transcribe(str(wav), language=None if language=="auto" else language,
                                    vad_filter=True, beam_size=3)
     cues=[]
+    duration = float(info.get("duration") or 0)
     for segment in segments:
         phrase = str(segment.text).strip()
         if phrase:
             cues.append({"start":segment.start,"end":segment.end,"text":phrase})
-            change(job, progress=min(95, len(cues)))
+            if duration > 0:
+                change(job, progress=min(95, round(30 + 65 * float(segment.end) / duration)))
     if not cues:
         raise RuntimeError("Không nhận dạng được lời nói trong video.")
-    change(job,note="Đã nhận dạng giọng nói bằng faster-whisper (CPU).")
+    change(job,note=f"Đã nhận dạng giọng nói bằng faster-whisper {job['model']} (CPU).")
     return info,cues
 
 def execute(job):
@@ -161,7 +166,7 @@ def execute(job):
                 except Exception as exc:
                     if job["mode"]=="subtitles":
                         raise
-                    change(job,note="Không có phụ đề phù hợp; chuyển sang nhận dạng giọng nói.")
+                    change(job,note="Không lấy được phụ đề (" + str(exc)[:120] + "); đang thử nhận dạng giọng nói.")
             if cues is None:
                 info,cues=speech_to_text(job["url"],job["language"],temp,job)
             folder=Path(job["folder"])
@@ -189,7 +194,8 @@ def start():
         return jsonify(error="Liên kết không hợp lệ."),400
     lang=str(data.get("language") or "vi")
     mode=str(data.get("mode") or "auto")
-    if lang not in LANGS or mode not in MODES:
+    model=str(data.get("model") or "small")
+    if lang not in LANGS or mode not in MODES or model not in MODELS:
         return jsonify(error="Lựa chọn nhận dạng không hợp lệ."),400
     folder=str(data.get("folder") or (Path.home() / "Downloads")).strip()
     if len(folder)>800:
@@ -198,7 +204,7 @@ def start():
         if any(not j.get("finished") for j in JOBS.values()):
             return jsonify(error="Đang xử lý một video khác. Hãy đợi tác vụ hiện tại kết thúc."),409
         job={"id":uuid.uuid4().hex,"url":url,"folder":folder,"mode":mode,"language":lang,
-             "status":"Đang chuẩn bị","progress":0,"finished":False,"error":"","note":"","txt":"","srt":""}
+             "model":model,"status":"Đang chuẩn bị","progress":0,"finished":False,"error":"","note":"","txt":"","srt":""}
         JOBS[job["id"]]=job
         for ident in list(JOBS)[:-15]:
             if JOBS[ident].get("finished"):
@@ -210,3 +216,19 @@ def start():
 def check():
     with LOCK:
         return jsonify(jobs=list(JOBS.values())[-15:])
+
+
+@transcript_api.get("/api/transcript-preview/<identifier>")
+def preview(identifier):
+    # Only read files belonging to recorded completed jobs.
+    with LOCK:
+        job = JOBS.get(identifier)
+        if not job or not job.get("finished") or not job.get("txt"):
+            return jsonify(error="Chưa có kết quả văn bản."), 404
+        filename = job["txt"]
+    try:
+        with open(filename, "r", encoding="utf-8-sig") as handle:
+            content = handle.read(300000)
+        return jsonify(text=content, truncated=len(content) >= 300000)
+    except OSError:
+        return jsonify(error="Không đọc được file kết quả; có thể file đã được di chuyển."), 404
