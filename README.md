@@ -38,3 +38,12 @@ Whisper dùng CPU, tải mô hình từ mạng trong lần sử dụng đầu ti
 - Chỉ tải tài liệu bạn sở hữu hoặc có quyền lưu. Không vượt DRM hoặc quyền truy cập.
 
 Bản Tkinter cũ vẫn còn ở \`app.py\` nếu cần quay lại.
+
+
+## Chuyển file ghi âm thành văn bản
+
+Mở **Lấy văn bản** → **Chuyển file ghi âm thành văn bản**. Chọn file MP3, M4A, WAV, MP4, WebM, OGG, FLAC, AAC, WMA, Opus, MOV hoặc MKV (tối đa 250 MB), chọn tiếng Việt/Anh/tự nhận diện, mô hình Whisper, rồi bấm **Chuyển file thành văn bản**.
+
+File được xử lý cục bộ qua máy chủ Flask trên localhost, không gửi lên dịch vụ nhận dạng giọng nói bên ngoài. File tải lên tạm thời được xóa sau khi hoàn tất hoặc lỗi; TXT và SRT lưu trong thư mục đã chọn. Khi chạy lần đầu, mô hình Whisper sẽ được tải từ Internet vào cache. Hiện mỗi lần chỉ thực hiện một tác vụ văn bản. Nếu tắt phần mềm giữa chừng, tác vụ này chưa thể tiếp tục.
+
+Cập nhật: dừng Flask cũ bằng Ctrl+C, chạy `git pull origin main`, `py -m pip install -r requirements-transcription.txt` và `py web_app.py`.
