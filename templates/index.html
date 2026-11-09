@@ -1,124 +1,124 @@
-<!doctype html>
-<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="google" content="notranslate"><title>VideoSaver VN · Download Manager</title>
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="google" content="notranslate"><title>VideoSaver VN · Media Workspace</title>
 <style>
-:root{color-scheme:dark;font-family:"Segoe UI",Arial,sans-serif;background:#0b1020;color:#eef2ff;font-size:14px}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#0b1020}button,input,select{font:inherit}
-button{cursor:pointer;border:1px solid #303d55;background:#1c2841;color:#eef2ff;border-radius:10px;padding:11px 15px;font-weight:600}
-button:hover{background:#2a3956}button:disabled{opacity:.42;cursor:not-allowed}
-button.primary{background:#7357ed;border-color:#846af9;color:#fff}button.primary:hover{background:#866af7}
-button.ghost{background:transparent;border-color:#303d55}
-input,select{display:block;width:100%;border:1px solid #32405b;border-radius:10px;padding:12px 13px;color:#edf3ff;background:#0e1629;outline:none;min-width:0}
-input:focus,select:focus{border-color:#8b76ff;box-shadow:0 0 0 3px #846aff22}
-label{display:block;font-size:12px;font-weight:700;color:#b8c5df;margin:0 0 9px}
-.app{display:grid;grid-template-columns:220px minmax(0,1fr);min-height:100vh}
-.sidebar{background:#101729;border-right:1px solid #29354d;padding:28px 16px;display:flex;flex-direction:column;gap:22px}
-.brand{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:800;letter-spacing:-.5px;padding:0 8px}
-.brandmark{width:37px;height:37px;display:grid;place-items:center;background:linear-gradient(135deg,#8f69ff,#466ffc);border-radius:11px}
-.nav{display:flex;flex-direction:column;gap:6px}.nav button{border:0;text-align:left;padding:13px 15px;background:transparent;color:#aebbd4}
-.nav button.active{background:#25294e;color:#fff}.sidefoot{margin-top:auto;color:#8c9bb9;font-size:12px;line-height:1.8;padding:8px}
-.main{width:100%;max-width:1250px;margin:auto;padding:32px clamp(20px,4vw,54px) 60px}
-.head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:25px}
-.head h1{font-size:27px;letter-spacing:-.9px;margin:0 0 7px}.sub{color:#94a3bd;margin:0;font-size:13px}
-.statuspill{border-radius:999px;color:#70e1b1;background:#12372f;border:1px solid #265545;padding:8px 12px;font-size:12px;white-space:nowrap}
-.card{background:#151e31;border:1px solid #2a3850;border-radius:17px;padding:23px;margin-bottom:20px;box-shadow:0 10px 30px #060a1420}
-.sectionhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:18px}.sectionhead h2{font-size:16px;margin:0}.muted{color:#8e9db7;font-size:12px}
-.urlrow{display:flex;gap:10px}.urlrow input{flex:1}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:17px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:18px}
-.folderrow{display:flex;gap:8px}.folderrow input{flex:1}
-.preview{display:flex;gap:18px;margin-top:18px;background:#0e1729;border:1px solid #2b3851;border-radius:13px;padding:14px;align-items:center}
-.preview.hidden,.hidden{display:none!important}.preview img{width:180px;max-width:35%;aspect-ratio:16/9;object-fit:cover;background:#27334a;border-radius:10px}
-.preview h3{margin:0 0 7px;font-size:15px;line-height:1.5}.preview p{color:#9dabca;font-size:12px;margin:0 0 7px}
-.pill{display:inline-block;background:#252e4a;color:#c2b6ff;border-radius:7px;padding:6px 8px;font-size:11px}
-.notice{color:#aab8d2;font-size:12px;margin:12px 0 0;line-height:1.65}.notice.error{color:#ff9b9b}
-.tabs{display:flex;gap:8px}.tabs button{padding:8px 12px;font-size:12px}.tabs .active{background:#493e86;border-color:#6657ad}
-.task{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:13px;align-items:center;padding:14px;border:1px solid #2d3a52;border-radius:12px;background:#0f182a;margin-top:10px}
-.taskicon{height:50px;width:56px;border-radius:9px;background:#25304a;display:grid;place-items:center;color:#b3a5ff;font-size:22px;overflow:hidden}
-.taskicon img{width:100%;height:100%;object-fit:cover}
-.tasktitle{font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
-.taskmeta{font-size:11px;color:#9bacc7;margin-top:6px}.taskright{display:flex;align-items:center;gap:10px}
-.taskright button{padding:7px 10px;font-size:11px}.progress{height:6px;border-radius:8px;background:#29364f;overflow:hidden;margin-top:9px}
-.progress div{height:100%;background:linear-gradient(90deg,#936bff,#3984f7);transition:width .25s}
-.tag{font-size:11px;padding:5px 8px;background:#23314b;border-radius:6px;color:#c5d0e6}
-.empty{text-align:center;padding:36px 10px;color:#97a7c2}.empty strong{display:block;color:#dbe4f6;margin:10px}
-details{border:1px solid #2c3951;border-radius:12px;padding:14px;background:#0e1626}summary{cursor:pointer;font-weight:600}
-pre{white-space:pre-wrap;word-break:break-word;color:#9cb0d4;font-size:11px;max-height:200px;overflow:auto;line-height:1.8}
-.footer{font-size:11px;color:#8290ac;margin-top:17px}
-@media(max-width:900px){.app{display:block}.sidebar{padding:15px 20px;flex-direction:row;align-items:center}.nav{flex-direction:row}.sidefoot{display:none}.main{padding:25px 18px}}
-@media(max-width:640px){.head{align-items:start;flex-direction:column}.grid{grid-template-columns:1fr}.urlrow{flex-wrap:wrap}.urlrow input{flex-basis:100%}.urlrow button{flex:1}.card{padding:16px}.brand{font-size:15px}.sidebar{gap:8px;justify-content:space-between}.nav button{font-size:11px;padding:9px}.task{grid-template-columns:45px minmax(0,1fr);gap:9px}.taskicon{width:43px}.taskright{grid-column:2;justify-content:space-between}.preview img{width:110px}}
+:root{font-family:"Segoe UI",Arial,sans-serif;color:#eaf0ff;background:#0b1120;color-scheme:dark;font-size:14px}
+*{box-sizing:border-box}body{margin:0;min-height:100vh}button,input,select,textarea{font:inherit}
+button{color:#eaf0ff;background:#1e2b44;border:1px solid #33435e;border-radius:10px;padding:11px 15px;cursor:pointer;font-weight:600}
+button:hover{background:#2b3d60}button:disabled{opacity:.45;cursor:not-allowed}
+button.mainbtn{background:#7056e8;border-color:#8b76fa;color:white}button.mainbtn:hover{background:#826af6}
+input,select,textarea{width:100%;padding:12px 13px;background:#0d1729;border:1px solid #35435e;border-radius:10px;color:#edf2ff;outline:0;min-width:0}
+input:focus,select:focus,textarea:focus{border-color:#957dff;box-shadow:0 0 0 3px #8b6cfe22}
+label{display:block;color:#b6c4da;font-size:12px;font-weight:650;margin:0 0 9px}
+.layout{display:grid;grid-template-columns:224px minmax(0,1fr);min-height:100vh}
+aside{background:#10182b;border-right:1px solid #25334a;padding:26px 14px;display:flex;flex-direction:column;gap:30px;position:sticky;top:0;height:100vh}
+.brand{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:800;padding:0 9px;letter-spacing:-.5px}
+.logo{display:grid;place-items:center;background:linear-gradient(130deg,#9a6df4,#466aff);width:38px;height:38px;border-radius:12px;font-size:20px}
+nav{display:flex;flex-direction:column;gap:5px}nav button{background:transparent;text-align:left;border:0;color:#a6b5cd;padding:13px 14px;font-weight:600}
+nav button.active{background:#2b2b53;color:#fff}nav button span{display:inline-block;width:25px}
+.asidefoot{margin-top:auto;padding:10px;color:#8296b5;font-size:12px;line-height:2}
+main{padding:36px clamp(20px,4vw,55px) 70px;width:100%;max-width:1240px;margin:0 auto}
+.view{display:none}.view.active{display:block}
+.head{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:25px}
+h1{font-size:26px;letter-spacing:-.8px;margin:0 0 7px}h2{font-size:16px;margin:0}h3{font-size:14px;margin:0 0 8px}
+.sub{color:#95a6c0;font-size:13px;margin:0;line-height:1.6}
+.health{font-size:12px;background:#12382e;color:#82e9c0;border:1px solid #28594a;border-radius:30px;padding:8px 12px;white-space:nowrap}
+.card{border:1px solid #2b3a53;background:#161f32;border-radius:17px;padding:22px;margin-bottom:18px}
+.cardhead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:19px}
+.muted{font-size:12px;color:#93a5bf}
+.row{display:flex;gap:9px}.row input{flex:1}.row.wrap{flex-wrap:wrap}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:17px;margin-top:18px}
+.folder{display:flex;gap:8px}.folder input{flex:1}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:19px}
+.note{color:#91a5c2;font-size:12px;line-height:1.6;margin:9px 0 0;white-space:pre-wrap}.note.error{color:#ffaaa9}
+.preview{display:flex;align-items:center;gap:17px;border:1px solid #30415c;background:#0e1728;border-radius:12px;padding:13px;margin-top:18px}
+.preview img{width:168px;aspect-ratio:16/9;object-fit:cover;border-radius:9px;background:#273850}
+.preview h3{font-size:15px;line-height:1.5}.preview p{color:#9aacc6;font-size:12px;margin:0 0 8px}
+.tag{display:inline-block;background:#263354;border-radius:7px;color:#c0b6ff;font-size:11px;padding:5px 8px}
+.hidden{display:none!important}
+.task{background:#101a2d;border:1px solid #2c3b56;border-radius:12px;padding:14px;display:grid;grid-template-columns:60px minmax(0,1fr) auto;gap:12px;align-items:center;margin-top:10px}
+.task img{width:60px;height:48px;object-fit:cover;border-radius:7px}
+.task .icon{width:60px;height:48px;display:grid;place-items:center;background:#293757;border-radius:8px}
+.tasktitle{font-weight:700;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.taskmeta{font-size:11px;color:#93a5bf;margin-top:6px;line-height:1.7}
+.taskright{display:flex;align-items:center;gap:8px}
+.taskright button{padding:7px 10px;font-size:11px}
+.bar{height:7px;background:#2c3b56;border-radius:10px;overflow:hidden;margin-top:9px}.bar span{display:block;height:100%;background:linear-gradient(90deg,#9e79ff,#5288fa)}
+.empty{text-align:center;color:#9aacc7;padding:30px 15px}
+.metric{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}.metric>div{padding:16px;background:#151f33;border:1px solid #2d3c55;border-radius:12px}.metric strong{font-size:23px;display:block}.metric span{color:#94a7c3;font-size:12px}
+.txtpreview{white-space:pre-wrap;background:#0c1628;border:1px solid #35435c;line-height:1.8;max-height:380px;overflow:auto;padding:18px;border-radius:12px;color:#dae6f9;min-height:120px}
+details{border:1px solid #334159;border-radius:11px;padding:14px;background:#0e1727}summary{cursor:pointer;font-weight:600}
+pre{white-space:pre-wrap;word-break:break-word;font-size:11px;line-height:1.7;color:#9cafd0;max-height:250px;overflow:auto}
+.footer{font-size:11px;color:#8194b1;line-height:1.7;margin-top:16px}
+@media(max-width:900px){.layout{display:block}aside{position:static;height:auto;display:flex;align-items:center;flex-direction:row;padding:12px 20px;justify-content:space-between;gap:10px}.asidefoot{display:none}nav{flex-direction:row;gap:2px}nav button{font-size:12px;padding:10px}main{padding:25px 20px}}
+@media(max-width:660px){.brand{font-size:14px}.brand .logo{display:none}nav button span{display:none}.head{flex-direction:column;align-items:flex-start}.grid{grid-template-columns:1fr}.card{padding:16px}.row{flex-wrap:wrap}.row input{flex-basis:100%}.row button{flex:1}.preview img{width:110px}.task{grid-template-columns:48px minmax(0,1fr)}.task img,.task .icon{width:48px;height:45px}.taskright{grid-column:2;justify-content:space-between}.metric{grid-template-columns:repeat(3,1fr)}}
 </style></head><body>
-<div class="app">
-<aside class="sidebar">
-<div class="brand"><span class="brandmark">▶</span><span>VideoSaver <span style="color:#a38dff">VN</span></span></div>
-<nav class="nav"><button class="active" id="navDownload">⬇ &nbsp; Tải video</button><button id="navHistory">▤ &nbsp; Lịch sử</button></nav>
-<div class="sidefoot">● Chạy trên máy của bạn<br>Phiên bản 3.0<br>Chỉ tải nội dung được phép lưu.</div>
-</aside>
-<main class="main">
-<div class="head"><div><h1>Trình tải video</h1><p class="sub">Phân tích liên kết, chọn độ phân giải và quản lý hàng đợi tại một nơi.</p></div><span class="statuspill" id="health">● Đang kiểm tra...</span></div>
-<section class="card" id="downloadPanel">
-<div class="sectionhead"><h2>Thêm video mới</h2><span class="muted">Bước 1 · Phân tích video</span></div>
-<label for="url">Liên kết video</label>
-<div class="urlrow"><input id="url" type="url" placeholder="Dán liên kết YouTube hoặc nguồn được hỗ trợ" autocomplete="off"><button id="paste">Dán link</button><button class="primary" id="analyze">⌕ Phân tích</button></div>
-<div id="message" class="notice">Nhập một liên kết rồi chọn “Phân tích” để xem tên video, ảnh và chất lượng khả dụng.</div>
-<div id="preview" class="preview hidden"><img id="thumb" alt="Ảnh đại diện video"><div><h3 id="title"></h3><p id="channel"></p><span id="duration" class="pill"></span> <span id="available" class="pill"></span></div></div>
-<div class="grid"><div><label for="quality">Chất lượng / định dạng</label><select id="quality"><option value="best">Video · Tốt nhất</option><option value="2160">Video · Tối đa 2160p (4K)</option><option value="1440">Video · Tối đa 1440p</option><option value="1080">Video · Tối đa 1080p</option><option value="720">Video · Tối đa 720p</option><option value="480">Video · Tối đa 480p</option><option value="360">Video · Tối đa 360p</option><option value="240">Video · Tối đa 240p</option><option value="144">Video · Tối đa 144p</option><option value="mp3">Âm thanh · MP3</option><option value="m4a">Âm thanh · M4A</option><option value="opus">Âm thanh · Opus</option></select><p class="notice">Các mức tối đa tự chọn chất lượng thấp hơn nếu cần. Nguồn quyết định định dạng thực tế.</p></div>
-<div><label for="folder">Thư mục lưu về máy</label><div class="folderrow"><input id="folder" value="{{ folder }}" spellcheck="false"><button id="pick" title="Chọn thư mục trên máy">📁 Chọn</button></div><p class="notice">Bạn cũng có thể nhập trực tiếp đường dẫn thư mục Windows.</p></div></div>
-<div class="actions"><button class="primary" id="add">＋ Thêm vào hàng đợi</button><button id="open">📂 Mở thư mục lưu</button></div>
+<div class="layout"><aside><div class="brand"><span class="logo">▶</span><span>VideoSaver <span style="color:#aa92ff">VN</span></span></div>
+<nav><button data-page="download" class="active"><span>↓</span> Tải video</button><button data-page="transcript"><span>▤</span> Lấy văn bản</button><button data-page="history"><span>◷</span> Lịch sử</button><button data-page="settings"><span>⚙</span> Cài đặt</button></nav>
+<div class="asidefoot">● Hoạt động trên máy của bạn<br>Media Workspace v4.0</div></aside><main>
+<section id="page-download" class="view active">
+<div class="head"><div><h1>Tải video</h1><p class="sub">Dán liên kết, xem trước nội dung rồi chọn chất lượng.</p></div><span class="health" id="health">Đang kiểm tra FFmpeg...</span></div>
+<div class="card"><div class="cardhead"><h2>Thêm video</h2><span class="muted">Bước 1 · Phân tích liên kết</span></div>
+<label for="url">Liên kết video</label><div class="row"><input id="url" type="url" placeholder="https://www.youtube.com/watch?v=..." autocomplete="off"><button id="paste">Dán</button><button class="mainbtn" id="analyze">Phân tích</button></div><p id="downloadMessage" class="note">Dán liên kết video mà bạn có quyền tải xuống.</p>
+<div id="preview" class="preview hidden"><img id="thumb" alt="Ảnh đại diện video"><div><h3 id="title"></h3><p id="channel"></p><span class="tag" id="duration"></span> <span class="tag" id="available"></span></div></div>
+<div class="grid"><div><label for="format">Định dạng / chất lượng</label><select id="format"><option value="best">MP4 · Tốt nhất</option><option value="2160">MP4 · tối đa 2160p</option><option value="1440">MP4 · tối đa 1440p</option><option value="1080">MP4 · tối đa 1080p</option><option value="720">MP4 · tối đa 720p</option><option value="480">MP4 · tối đa 480p</option><option value="360">MP4 · tối đa 360p</option><option value="240">MP4 · tối đa 240p</option><option value="144">MP4 · tối đa 144p</option><option value="mp3">Âm thanh MP3</option><option value="m4a">Âm thanh M4A</option><option value="opus">Âm thanh Opus</option></select><p class="note">Chất lượng tối đa có thể hạ xuống mức thấp hơn khi nguồn không hỗ trợ.</p></div><div><label for="folder">Thư mục lưu</label><div class="folder"><input id="folder" value="{{ folder }}" spellcheck="false"><button id="chooseFolder">📁 Chọn</button></div></div></div>
+<div class="actions"><button class="mainbtn" id="add">＋ Thêm vào hàng đợi</button><button id="openFolder">Mở thư mục</button><button id="sendToText">Lấy văn bản từ video này</button></div></div>
+<div class="card"><div class="cardhead"><h2>Đang tải & chờ tải</h2><button id="seeAll">Xem tất cả →</button></div><div id="miniTasks" class="empty">Chưa có video trong hàng đợi.</div></div>
 </section>
-<section class="card" id="textPanel">
-<div class="sectionhead"><h2>📝 Lấy văn bản từ video</h2><span class="muted">Xuất TXT và SRT</span></div>
-<p class="notice" style="margin:0 0 16px">Sử dụng liên kết ở phía trên. Ưu tiên lấy phụ đề có sẵn; nếu không có, có thể dùng AI để nhận dạng lời nói trên CPU.</p>
-<div class="grid" style="margin-top:0">
-<div><label for="textmode">Phương pháp</label><select id="textmode"><option value="auto">Tự động: phụ đề trước, AI nếu cần</option><option value="subtitles">Chỉ lấy phụ đề có sẵn (nhanh)</option><option value="speech">Nhận dạng lời nói bằng AI (CPU)</option></select></div>
-<div><label for="textlang">Ngôn ngữ</label><select id="textlang"><option value="vi">Tiếng Việt</option><option value="en">Tiếng Anh</option><option value="auto">Tự nhận diện / có sẵn</option></select></div>
-</div><div class="actions"><button class="primary" id="makeText">✦ Lấy văn bản</button><span id="textStatus" class="notice" style="margin:10px 0">Chưa có tác vụ</span></div>
-<div id="textResults" class="notice"></div>
+<section id="page-transcript" class="view">
+<div class="head"><div><h1>Lấy văn bản từ video</h1><p class="sub">Lấy phụ đề nhanh hoặc dùng AI nhận dạng lời nói, lưu TXT và SRT.</p></div><span class="tag">Whisper · CPU</span></div>
+<div class="card"><div class="cardhead"><h2>Chuyển video thành văn bản</h2><span class="muted">Không cần tải video thủ công trước</span></div>
+<label for="textUrl">Liên kết video</label><input id="textUrl" placeholder="Dán liên kết video..." type="url">
+<div class="grid"><div><label for="textMode">Phương pháp</label><select id="textMode"><option value="auto">Tự động — phụ đề trước, Whisper nếu cần</option><option value="subtitles">Chỉ trích xuất phụ đề (nhanh nhất)</option><option value="speech">Nhận dạng lời nói bằng Whisper (CPU)</option></select></div><div><label for="textLang">Ngôn ngữ</label><select id="textLang"><option value="vi">Tiếng Việt</option><option value="en">Tiếng Anh</option><option value="auto">Tự nhận diện / ngôn ngữ có sẵn</option></select></div></div>
+<div class="grid"><div><label for="textModel">Mô hình Whisper</label><select id="textModel"><option value="tiny">Tiny — nhanh nhất, độ chính xác thấp hơn</option><option value="base">Base — nhanh</option><option value="small" selected>Small — cân bằng</option><option value="medium">Medium — chậm hơn, yêu cầu CPU/RAM cao</option></select></div><div><label for="textFolder">Thư mục lưu TXT / SRT</label><div class="folder"><input id="textFolder" value="{{ folder }}"><button id="chooseTextFolder">📁 Chọn</button></div></div></div>
+<div class="actions"><button class="mainbtn" id="startText">✦ Lấy văn bản</button><button id="useDownloadUrl">Lấy link từ trang Tải video</button></div><p class="note" id="textMessage">Whisper tải mô hình về máy trong lần đầu; video dài cần nhiều thời gian xử lý.</p></div>
+<div class="card"><div class="cardhead"><h2>Tiến độ & kết quả</h2><span class="muted" id="textState">Chưa có tác vụ</span></div>
+<div class="bar"><span id="textBar" style="width:0%"></span></div><p class="note" id="textNote">Kết quả được lưu thành file TXT và SRT trong thư mục đã chọn.</p>
+<div id="speechFallback" class="actions hidden"><button class="mainbtn" id="tryWhisper">Không có phụ đề? Dùng Whisper</button></div>
+<div class="actions"><button id="copyText" disabled>Sao chép văn bản</button><button id="openTextFolder">Mở thư mục</button></div>
+<label style="margin-top:17px">Xem trước nội dung TXT</label><div id="textContent" class="txtpreview">Văn bản sẽ hiển thị ở đây khi xử lý xong.</div><p id="textFiles" class="note"></p></div>
 </section>
-<section class="card" id="tasksPanel"><div class="sectionhead"><h2>Danh sách tải xuống <span class="muted" id="taskCount"></span></h2><div class="tabs"><button id="allTab" class="active">Tất cả</button><button id="activeTab">Đang tải</button><button id="doneTab">Hoàn tất</button></div></div><div id="tasks"></div></section>
-<details><summary>Nhật ký kỹ thuật / Chi tiết lỗi</summary><pre id="logs">Chưa có hoạt động.</pre></details>
-<p class="footer">VideoSaver VN chạy trên localhost. Không hỗ trợ DRM hay truy cập trái phép. Nếu nguồn đổi cấu trúc, hãy cập nhật yt-dlp.</p>
+<section id="page-history" class="view">
+<div class="head"><div><h1>Hàng đợi & lịch sử</h1><p class="sub">Theo dõi các video đang tải, tải thành công và lỗi.</p></div><button id="refreshHistory">↻ Làm mới</button></div>
+<div class="metric"><div><strong id="totalCount">0</strong><span>Tổng lượt tải</span></div><div><strong id="activeCount">0</strong><span>Đang chờ / xử lý</span></div><div><strong id="doneCount">0</strong><span>Hoàn tất</span></div></div>
+<div class="card"><div class="cardhead"><h2>Danh sách</h2><select id="taskFilter" style="width:auto"><option value="all">Tất cả</option><option value="active">Đang chờ / tải</option><option value="done">Đã hoàn tất</option><option value="failed">Thất bại / gián đoạn</option></select></div><div id="allTasks"></div></div>
+</section>
+<section id="page-settings" class="view">
+<div class="head"><div><h1>Cài đặt</h1><p class="sub">Thư mục lưu, mô hình AI, môi trường tải và nhật ký kỹ thuật.</p></div></div>
+<div class="card"><div class="cardhead"><h2>Tùy chọn mặc định</h2></div><label for="defaultFolder">Thư mục lưu mặc định</label><div class="folder"><input id="defaultFolder" value="{{ folder }}"><button id="pickDefault">📁 Chọn</button></div><div class="actions"><button class="mainbtn" id="saveSettings">Lưu tùy chọn</button></div><p class="note">Cài đặt được lưu trong trình duyệt này. Khi đổi thư mục mặc định, các lượt tải trước vẫn giữ nguyên đường dẫn cũ.</p></div>
+<div class="card"><div class="cardhead"><h2>Trạng thái công cụ</h2></div><p class="note" id="systemCheck">Đang kiểm tra...</p><p class="note">Nếu YouTube gặp lỗi định dạng, hãy cập nhật yt-dlp và cài Deno. Nhận dạng giọng nói cần faster-whisper.</p></div>
+<details><summary>Nhật ký kỹ thuật · Mở khi cần kiểm tra lỗi</summary><pre id="logs">Chưa có sự kiện.</pre></details>
+</section>
+<p class="footer">VideoSaver VN chạy trên localhost. Chỉ tải nội dung bạn có quyền lưu. Không hỗ trợ vượt DRM hay quyền truy cập.</p>
 </main></div>
 <script>
 const TOKEN={{ token|tojson }}, $=id=>document.getElementById(id);
-let video=null, latest=[], filter="all", busy=false;
-async function api(route,data){const r=await fetch("/api/"+route,{method:data===undefined?"GET":"POST",headers:{"Content-Type":"application/json","X-VideoSaver-Token":TOKEN},body:data===undefined?undefined:JSON.stringify(data)});const v=await r.json();if(!r.ok)throw Error(v.error||"Không thể thực hiện thao tác");return v}
-function message(v,error=false){$("message").textContent=v;$("message").className="notice"+(error?" error":"")}
-function duration(v){if(!Number.isFinite(v))return "Chưa có thời lượng";return [Math.floor(v/3600),Math.floor(v%3600/60),Math.floor(v%60)].filter((x,i)=>i||v>=3600).map(x=>String(x).padStart(2,"0")).join(":")}
-function safeImage(url){try{const u=new URL(url);return ["http:","https:"].includes(u.protocol)?u.href:""}catch{return ""}}
-function el(tag,cls,text){const x=document.createElement(tag);if(cls)x.className=cls;if(text!==undefined)x.textContent=text;return x}
-function setPreview(v){video=v;$("preview").classList.remove("hidden");$("thumb").src=safeImage(v.thumbnail);$("title").textContent=v.title;$("channel").textContent=v.uploader;$("duration").textContent=duration(v.duration);$("available").textContent=v.heights.length?"Có: "+v.heights.join("p · ")+"p":"Không có danh sách độ phân giải";const choices=[...$("quality").options];choices.forEach(o=>{const q=Number(o.value);o.disabled=q>0&&v.heights.length>0&&!v.heights.some(h=>h<=q)});if($("quality").selectedOptions[0]?.disabled)$("quality").value="best"}
-$("analyze").onclick=async()=>{const url=$("url").value.trim();if(!url)return message("Bạn chưa dán liên kết.",true);busy=true;$("analyze").disabled=true;$("analyze").textContent="Đang phân tích...";video=null;$("preview").classList.add("hidden");message("Đang đọc thông tin từ nguồn video...");try{const v=await api("analyze",{url});setPreview(v);message("Đã phân tích xong. Chọn chất lượng và thêm vào hàng đợi.")}catch(e){message(e.message,true)}finally{busy=false;$("analyze").disabled=false;$("analyze").textContent="⌕ Phân tích"}};
-$("url").addEventListener("input",()=>{video=null;$("preview").classList.add("hidden");[...$("quality").options].forEach(o=>o.disabled=false)});
-$("paste").onclick=async()=>{try{$("url").value=await navigator.clipboard.readText();$("url").dispatchEvent(new Event("input"))}catch{message("Không thể đọc clipboard. Hãy dùng Ctrl+V.",true)}};
-$("add").onclick=async()=>{if(!$("url").value.trim())return message("Hãy dán liên kết trước.",true);try{await api("add",{url:$("url").value.trim(),quality:$("quality").value,folder:$("folder").value,title:video?.title||"Video",thumbnail:video?.thumbnail||""});message("Đã thêm vào hàng đợi. Bạn có thể tiếp tục thêm video khác.");refresh()}catch(e){message(e.message,true)}};
-$("pick").onclick=async()=>{try{const x=await api("select-folder",{});if(x.folder)$("folder").value=x.folder}catch(e){message(e.message,true)}};
-$("open").onclick=async()=>{try{await api("open-folder",{folder:$("folder").value})}catch(e){message(e.message,true)}};
-function filterSet(v){filter=v;["all","active","done"].forEach(x=>$(x+"Tab").classList.toggle("active",x===v));renderTasks()}
-$("allTab").onclick=()=>filterSet("all");$("activeTab").onclick=()=>filterSet("active");$("doneTab").onclick=()=>filterSet("done");
-$("navDownload").onclick=()=>{window.scrollTo({top:0,behavior:"smooth"});$("navDownload").classList.add("active");$("navHistory").classList.remove("active")};
-$("navHistory").onclick=()=>{filterSet("done");$("tasksPanel").scrollIntoView({behavior:"smooth"});$("navHistory").classList.add("active");$("navDownload").classList.remove("active")};
-const labels={waiting:"Đang chờ",downloading:"Đang tải",processing:"Đang xử lý",done:"Hoàn tất",failed:"Thất bại",cancelled:"Đã hủy",interrupted:"Gián đoạn"};
-function renderTasks(){const box=$("tasks");box.replaceChildren();const selected=latest.filter(t=>filter==="all"||filter==="active"&&["waiting","downloading","processing"].includes(t.status)||filter==="done"&&["done","failed","cancelled","interrupted"].includes(t.status));$("taskCount").textContent="("+latest.length+")";if(!selected.length){const z=el("div","empty");z.append(el("div","", "▤"),el("strong","",filter==="all"?"Chưa có video nào":"Không có lượt tải ở mục này"),el("span","", "Các video bạn thêm sẽ xuất hiện ở đây."));box.append(z);return}
-for(const t of selected){const card=el("div","task");const icon=el("div","taskicon");const img=safeImage(t.thumbnail);if(img){const im=el("img");im.src=img;im.alt="";icon.append(im)}else icon.textContent="▶";const center=el("div");const title=el("div","tasktitle",t.title||t.url);title.title=t.title||t.url;const speed=t.speed?t.speed+" MB/s · ":"";const eta=Number.isFinite(t.eta)?"còn "+Math.round(t.eta)+"s · ":"";const meta=el("div","taskmeta",(labels[t.status]||t.status)+" · "+t.quality+" · "+speed+eta+(t.error||t.created||""));center.append(title,meta);if(["downloading","processing","done"].includes(t.status)){const p=el("div","progress");const f=el("div");f.style.width=(t.progress||0)+"%";p.append(f);center.append(p)}const right=el("div","taskright");right.append(el("span","tag",(t.progress||0).toFixed(0)+"%"));if(["waiting","downloading","processing"].includes(t.status)){const cancel=el("button","","Hủy");cancel.onclick=async()=>{try{await api("cancel",{id:t.id});refresh()}catch(e){message(e.message,true)}};right.append(cancel)}card.append(icon,center,right);box.append(card)}}
-async function refresh(){try{const d=await api("state");latest=d.tasks;$("logs").textContent=d.logs.length?d.logs.join("\n"):"Chưa có hoạt động.";renderTasks();$("health").textContent=d.ffmpeg?"● FFmpeg sẵn sàng":"⚠ Chưa tìm thấy FFmpeg";$("health").style.color=d.ffmpeg?"#70e1b1":"#ffba78"}catch{$("health").textContent="Không kết nối máy chủ"}}
-
-let lastTextId=null;
-$("makeText").onclick=async()=>{try{
-const url=$("url").value.trim();if(!url){message("Hãy nhập liên kết video ở trên trước.",true);return}
-const r=await api("transcribe",{url,folder:$("folder").value,mode:$("textmode").value,language:$("textlang").value});
-lastTextId=r.id;$("textStatus").textContent="Đã bắt đầu xử lý";$("makeText").disabled=true;$("textResults").textContent="";
-}catch(e){$("textStatus").textContent=e.message}};
-async function refreshText(){try{
-const r=await api("transcribe-status");const current=r.jobs.find(x=>x.id===lastTextId)||r.jobs[r.jobs.length-1];
-if(!current)return;
-lastTextId=current.id;$("textStatus").textContent=current.status+(current.progress>0?" · "+current.progress+"%":"");
-$("makeText").disabled=!current.finished;
-const results=$("textResults");results.replaceChildren();
-if(current.note)results.append(el("div","",current.note));
-if(current.error)results.append(el("div","notice error",current.error));
-if(current.txt){results.append(el("div","", "✓ Văn bản TXT: "+current.txt),el("div","", "✓ Phụ đề SRT: "+current.srt));}
-}catch(e){$("textStatus").textContent="Không đọc được trạng thái nhận dạng"}}
-setInterval(refreshText,1400);refreshText();
-
-refresh();setInterval(refresh,1250);
+let preview=null, tasks=[], textJob=null, recognized="", lastTextData="", currentPage="download";
+async function api(endpoint,data){const response=await fetch("/api/"+endpoint,{method:data===undefined?"GET":"POST",headers:{"Content-Type":"application/json","X-VideoSaver-Token":TOKEN},body:data===undefined?undefined:JSON.stringify(data)});const body=await response.json();if(!response.ok)throw Error(body.error||"Có lỗi xảy ra");return body}
+function safeImage(value){try{const url=new URL(value);return ["https:","http:"].includes(url.protocol)?url.href:""}catch{return ""}}
+function node(type,cls,text){const e=document.createElement(type);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e}
+function notice(id,text,error=false){$(id).textContent=text;$(id).className="note"+(error?" error":"")}
+function switchPage(name){currentPage=name;document.querySelectorAll(".view").forEach(x=>x.classList.toggle("active",x.id==="page-"+name));document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===name));window.scrollTo(0,0)}
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>switchPage(b.dataset.page));
+function secs(value){if(!Number.isFinite(value))return "Không rõ thời lượng";return [Math.floor(value/3600),Math.floor(value%3600/60),Math.floor(value%60)].filter((x,i)=>i>0||value>=3600).map(x=>String(x).padStart(2,"0")).join(":")}
+$("url").addEventListener("input",()=>{preview=null;$("preview").classList.add("hidden");[...$("format").options].forEach(o=>o.disabled=false)});
+$("paste").onclick=async()=>{try{$("url").value=await navigator.clipboard.readText();$("url").dispatchEvent(new Event("input"))}catch{notice("downloadMessage","Dùng Ctrl+V để dán liên kết.",true)}};
+$("analyze").onclick=async()=>{const url=$("url").value.trim();if(!url)return notice("downloadMessage","Bạn chưa nhập liên kết.",true);$("analyze").disabled=true;notice("downloadMessage","Đang kết nối và đọc thông tin video...");try{const v=await api("analyze",{url});preview=v;$("preview").classList.remove("hidden");$("thumb").src=safeImage(v.thumbnail);$("title").textContent=v.title;$("channel").textContent=v.uploader;$("duration").textContent=secs(v.duration);$("available").textContent=v.heights?.length?"Độ phân giải: "+v.heights.join("p · ")+"p":"Độ phân giải tùy nguồn";[...$("format").options].forEach(o=>{const q=Number(o.value);o.disabled=q>0&&v.heights.length>0&&!v.heights.some(h=>h<=q)});if($("format").selectedOptions[0]?.disabled)$("format").value="best";notice("downloadMessage","Đã phân tích. Chọn định dạng và thêm vào hàng đợi.")}catch(e){notice("downloadMessage",e.message,true)}finally{$("analyze").disabled=false}};
+async function choose(input){try{const r=await api("select-folder",{});if(r.folder)$(input).value=r.folder}catch(e){alert(e.message)}}
+$("chooseFolder").onclick=()=>choose("folder");$("chooseTextFolder").onclick=()=>choose("textFolder");$("pickDefault").onclick=()=>choose("defaultFolder");
+async function openFolder(folder){try{await api("open-folder",{folder})}catch(e){alert(e.message)}}
+$("openFolder").onclick=()=>openFolder($("folder").value);$("openTextFolder").onclick=()=>openFolder($("textFolder").value);
+$("add").onclick=async()=>{const url=$("url").value.trim();if(!url)return notice("downloadMessage","Bạn chưa nhập liên kết.",true);try{await api("add",{url,quality:$("format").value,folder:$("folder").value,title:preview?.title||"Video đang chờ",thumbnail:preview?.thumbnail||""});notice("downloadMessage","Đã thêm vào hàng đợi. Tiếp tục thêm video khác hoặc xem Lịch sử.");refresh()}catch(e){notice("downloadMessage",e.message,true)}};
+$("sendToText").onclick=()=>{$("textUrl").value=$("url").value;switchPage("transcript")};
+$("useDownloadUrl").onclick=()=>{$("textUrl").value=$("url").value;notice("textMessage","Đã lấy liên kết từ trang Tải video.")};
+$("seeAll").onclick=()=>switchPage("history");$("refreshHistory").onclick=()=>refresh();$("taskFilter").onchange=()=>renderTasks();
+$("saveSettings").onclick=()=>{const folder=$("defaultFolder").value.trim();if(!folder)return alert("Chưa nhập thư mục.");localStorage.setItem("videosavervn_folder",folder);$("folder").value=folder;$("textFolder").value=folder;alert("Đã lưu thư mục mặc định trên trình duyệt này.")};
+const stored=localStorage.getItem("videosavervn_folder");if(stored){$("folder").value=stored;$("textFolder").value=stored;$("defaultFolder").value=stored}
+const stateLabels={waiting:"Đang chờ lượt tải",downloading:"Đang tải dữ liệu",processing:"Đang ghép/chuyển đổi",done:"Hoàn tất",failed:"Tải thất bại",cancelled:"Đã hủy",interrupted:"Gián đoạn"};
+function taskCard(t){const wrap=node("div","task"),image=safeImage(t.thumbnail);if(image){const img=node("img");img.src=image;img.alt="";wrap.append(img)}else{wrap.append(node("div","icon","▶"))}const middle=node("div");const title=node("div","tasktitle",t.title||t.url);title.title=t.title||t.url;let info=stateLabels[t.status]||t.status;if(t.speed)info+=" · "+t.speed+" MB/s";if(Number.isFinite(t.eta))info+=" · còn "+Math.ceil(t.eta)+" giây";if(t.error)info+=" · "+t.error;const sub=node("div","taskmeta",info);middle.append(title,sub);if(["downloading","processing","done"].includes(t.status)){const bar=node("div","bar");const fill=node("span");fill.style.width=(t.progress||0)+"%";bar.append(fill);middle.append(bar)}const right=node("div","taskright");right.append(node("span","tag",t.status==="waiting"?"Đang chờ":t.status==="processing"?"Xử lý":t.status==="downloading"?(t.progress||0).toFixed(0)+"%":stateLabels[t.status]));if(["waiting","downloading","processing"].includes(t.status)){const cancel=node("button","","Hủy");cancel.onclick=async()=>{try{await api("cancel",{id:t.id});refresh()}catch(e){alert(e.message)}};right.append(cancel)}wrap.append(middle,right);return wrap}
+function renderTasks(){const filter=$("taskFilter").value;const active=t=>["waiting","downloading","processing"].includes(t.status);const filtered=tasks.filter(t=>filter==="all"||filter==="active"&&active(t)||filter==="done"&&t.status==="done"||filter==="failed"&&["failed","cancelled","interrupted"].includes(t.status));$("totalCount").textContent=tasks.length;$("activeCount").textContent=tasks.filter(active).length;$("doneCount").textContent=tasks.filter(t=>t.status==="done").length;const all=$("allTasks");all.replaceChildren();if(!filtered.length)all.append(node("div","empty","Chưa có tác vụ ở mục này."));else filtered.forEach(t=>all.append(taskCard(t)));const mini=$("miniTasks");mini.replaceChildren();const current=tasks.filter(active).slice(0,3);if(!current.length)mini.append(node("div","empty","Không có lượt tải đang chờ hoặc đang chạy."));else current.forEach(t=>mini.append(taskCard(t)))}
+async function refresh(){try{const r=await api("state");tasks=r.tasks;renderTasks();$("logs").textContent=r.logs.length?r.logs.join("\n"):"Chưa có sự kiện.";$("health").textContent=r.ffmpeg?"● FFmpeg sẵn sàng":"⚠ Chưa có FFmpeg";$("systemCheck").textContent=r.ffmpeg?"FFmpeg: đã nhận diện.":"FFmpeg: chưa tìm thấy. Hãy cài bằng winget install Gyan.FFmpeg và mở lại PowerShell."}catch(e){$("health").textContent="Không kết nối được máy chủ"}}
+$("startText").onclick=async()=>{const url=$("textUrl").value.trim();if(!url)return notice("textMessage","Hãy nhập liên kết video.",true);try{const r=await api("transcribe",{url,mode:$("textMode").value,language:$("textLang").value,model:$("textModel").value,folder:$("textFolder").value});textJob=r.id;recognized="";lastTextData="";$("textContent").textContent="Đang xử lý...";$("speechFallback").classList.add("hidden");$("copyText").disabled=true;$("startText").disabled=true;notice("textMessage","Đã tạo tác vụ xử lý. Có thể chuyển sang trang khác trong khi ứng dụng đang chạy.")}catch(e){notice("textMessage",e.message,true)}};
+$("tryWhisper").onclick=()=>{$("textMode").value="speech";$("speechFallback").classList.add("hidden");$("startText").click()};
+$("copyText").onclick=async()=>{try{await navigator.clipboard.writeText(recognized);notice("textMessage","Đã sao chép văn bản.")}catch(e){notice("textMessage","Không sao chép được tự động. Bạn có thể chọn nội dung trong ô và nhấn Ctrl+C.",true)}};
+async function refreshText(){try{const r=await api("transcribe-status");const job=r.jobs.find(j=>j.id===textJob)||r.jobs.at(-1);if(!job)return;textJob=job.id;$("textState").textContent=job.status;$("textBar").style.width=(job.progress||0)+"%";$("startText").disabled=!job.finished;if(job.note)$("textNote").textContent=job.note;if(job.error){notice("textMessage",job.error,true);$("speechFallback").classList.toggle("hidden",!(job.mode==="subtitles"&&(/phụ đề|subtitle/i).test(job.error)))}else if(job.finished){notice("textMessage","Đã xử lý xong.");$("speechFallback").classList.add("hidden")}if(job.txt){$("textFiles").textContent="TXT: "+job.txt+"\nSRT: "+job.srt;if(lastTextData!==job.id){lastTextData=job.id;try{const p=await api("transcript-preview/"+encodeURIComponent(job.id));recognized=p.text;$("textContent").textContent=p.text+(p.truncated?"\n\n[Đang hiển thị phần đầu của file]":"");$("copyText").disabled=!p.text}catch(e){$("textContent").textContent=e.message}}}}catch(e){/* retry on next poll */}}
+refresh();refreshText();setInterval(refresh,1300);setInterval(refreshText,1500);
 </script></body></html>
