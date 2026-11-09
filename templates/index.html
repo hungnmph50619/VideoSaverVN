@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VideoSaver VN — Video Downloader</title>
+<style>
+:root{font-family:Inter,"Segoe UI",system-ui,sans-serif;color:#e8edf8;background:#090d17}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 18% 0%,#162342 0%,transparent 42%),#090d17}
+.shell{max-width:1160px;margin:auto;padding:26px 24px 60px}.top{display:flex;align-items:center;justify-content:space-between;padding:12px 0 40px}
+.logo{font-size:21px;font-weight:800;letter-spacing:-.6px;display:flex;gap:12px;align-items:center}.mark{background:linear-gradient(135deg,#7c3aed,#2f81ff);padding:11px 13px;border-radius:13px}
+.pill{font-size:12px;color:#8ee2c7;background:#12382f;border:1px solid #275a4c;border-radius:50px;padding:9px 14px}
+.hero{text-align:center;margin-bottom:30px}.eyebrow{color:#a39afe;font-size:12px;letter-spacing:3px;font-weight:700}.hero h1{font-size:clamp(31px,5vw,53px);letter-spacing:-2px;margin:12px 0}.hero p{color:#9aa7bd;margin:0}
+.panel{background:#111827;border:1px solid #27344a;border-radius:22px;padding:28px;box-shadow:0 20px 80px #0005}
+label{display:block;font-size:13px;color:#b5c2d8;font-weight:700;margin:0 0 9px}
+input,select{background:#0b1220;border:1px solid #2b3a52;color:#f1f5ff;border-radius:12px;width:100%;padding:16px;font:inherit;outline:none}
+input:focus,select:focus{border-color:#8b6bff;box-shadow:0 0 0 3px #8b6bff22}
+.urlarea{display:flex;gap:12px}.urlarea input{flex:1}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:23px}
+button{border:0;border-radius:12px;padding:14px 20px;color:white;font-weight:750;cursor:pointer;background:#293750;font-size:14px;white-space:nowrap}
+button:hover{filter:brightness(1.15)}button:disabled{opacity:.45;cursor:not-allowed}.primary{background:linear-gradient(110deg,#7451ef,#397af7);box-shadow:0 8px 24px #554bf633}.secondary{border:1px solid #33465f;background:#172339}
+.actions{display:flex;gap:11px;margin-top:24px;flex-wrap:wrap}.actions .primary{flex:1;min-width:170px}.hint{font-size:12px;color:#788aa7;margin-top:8px}
+.statcard{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:24px;border-top:1px solid #283448;padding-top:24px}
+.status{font-size:18px;font-weight:800}.muted{color:#8294af;font-size:13px}.bar{background:#24334a;height:9px;border-radius:30px;margin-top:17px;overflow:hidden}.fill{background:linear-gradient(90deg,#8b5cf6,#35c7f3);height:100%;width:0%;transition:width .3s}
+.logs{margin-top:24px;background:#090f1c;border:1px solid #27344a;border-radius:14px;min-height:125px;max-height:230px;overflow:auto;padding:16px;white-space:pre-wrap;color:#96a9c7;font:12px/1.7 Consolas,monospace}
+.foot{display:flex;justify-content:space-between;color:#71829f;font-size:12px;margin-top:20px;gap:10px}
+@media(max-width:700px){.grid{grid-template-columns:1fr}.panel{padding:18px}.urlarea{flex-direction:column}.top{padding-bottom:25px}.foot{flex-direction:column}}
+</style></head>
+<body><div class="shell">
+<div class="top"><div class="logo"><span class="mark">▶</span> VideoSaver <span style="color:#9b88ff">VN</span></div><span class="pill">● Chạy trên máy của bạn</span></div>
+<div class="hero"><div class="eyebrow">VIDEO DOWNLOADER</div><h1>Tải video. <span style="color:#a697ff">Thật đơn giản.</span></h1><p>Dán liên kết, chọn chất lượng, lưu trực tiếp vào máy Windows.</p></div>
+<div class="panel">
+<label for="url">Liên kết video</label><div class="urlarea"><input id="url" placeholder="https://www.youtube.com/watch?v=..." type="url"><button class="secondary" id="paste">Dán link</button></div>
+<div class="grid"><div><label for="quality">Chất lượng / định dạng</label><select id="quality">
+<option value="best">🎬 Video MP4 • tốt nhất</option><option value="2160">Video MP4 • tối đa 4K (2160p)</option><option value="1440">Video MP4 • tối đa 1440p</option><option value="1080">Video MP4 • tối đa 1080p</option><option value="720">Video MP4 • tối đa 720p</option><option value="480">Video MP4 • tối đa 480p</option><option value="360">Video MP4 • tối đa 360p</option><option value="240">Video MP4 • tối đa 240p</option><option value="144">Video MP4 • tối đa 144p</option><option value="mp3">🎵 Âm thanh • MP3</option><option value="m4a">Âm thanh • M4A</option><option value="opus">Âm thanh • Opus</option>
+</select><div class="hint">Tự chọn mức thấp hơn khi nguồn không có độ phân giải yêu cầu.</div></div>
+<div><label for="folder">Thư mục lưu trên máy</label><input id="folder" value="{{ download_dir }}" autocomplete="off"><div class="hint">Nhập đường dẫn Windows, ví dụ C:\Users\...\Downloads</div></div></div>
+<div class="actions"><button class="primary" id="download">↓ Tải xuống ngay</button><button class="secondary" id="cancel" disabled>Hủy tải</button><button class="secondary" id="open">📁 Mở thư mục</button></div>
+<div class="statcard"><div><div class="muted">TIẾN ĐỘ TẢI</div><div class="status" id="status">Sẵn sàng</div></div><div style="text-align:right"><div class="status" id="percent">0%</div><div class="muted" id="speed">—</div></div></div>
+<div class="bar"><div class="fill" id="fill"></div></div>
+<div style="margin-top:22px;display:flex;justify-content:space-between;align-items:center"><label style="margin:0">Nhật ký hoạt động</label><span class="muted" id="ffmpeg"></span></div>
+<div class="logs" id="logs">Sẵn sàng tải video...</div>
+<div class="foot"><span>Chỉ tải nội dung bạn có quyền lưu. Không vượt DRM hoặc quyền truy cập.</span><span>VideoSaver VN · Local Web</span></div>
+</div></div>
+<script>
+const TOKEN={{ token|tojson }};
+const $=id=>document.getElementById(id);
+async function api(path,body){const r=await fetch('/api/'+path,{method:body===undefined?'GET':'POST',headers:{'Content-Type':'application/json','X-VideoSaver-Token':TOKEN},body:body===undefined?undefined:JSON.stringify(body)});const d=await r.json();if(!r.ok)throw Error(d.error||'Có lỗi xảy ra');return d}
+$('download').onclick=async()=>{try{await api('download',{url:$('url').value,quality:$('quality').value,folder:$('folder').value});refresh()}catch(e){alert(e.message)}};
+$('cancel').onclick=async()=>{try{await api('cancel',{})}catch(e){alert(e.message)}};
+$('open').onclick=async()=>{try{await api('open-folder',{folder:$('folder').value})}catch(e){alert(e.message)}};
+$('paste').onclick=async()=>{try{$('url').value=await navigator.clipboard.readText()}catch(e){$('url').focus();alert('Hãy nhấn Ctrl+V để dán liên kết.')}};
+async function refresh(){try{const d=await api('status');$('status').textContent=d.status;$('percent').textContent=(d.progress||0).toFixed(1)+'%';$('fill').style.width=(d.progress||0)+'%';$('speed').textContent=d.speed||'—';$('logs').textContent=d.logs.length?d.logs.join('\n'):'Sẵn sàng tải video...';$('download').disabled=d.running;$('cancel').disabled=!d.running;}catch(e){$('status').textContent='Không kết nối được với ứng dụng'}}
+api('health').then(d=>{$('ffmpeg').textContent=d.ffmpeg?'✓ FFmpeg đã sẵn sàng':'⚠ Chưa tìm thấy FFmpeg'}).catch(()=>{});
+refresh();setInterval(refresh,700);
+</script></body></html>
