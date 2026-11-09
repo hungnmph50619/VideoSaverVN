@@ -47,3 +47,12 @@ Mở **Lấy văn bản** → **Chuyển file ghi âm thành văn bản**. Chọ
 File được xử lý cục bộ qua máy chủ Flask trên localhost, không gửi lên dịch vụ nhận dạng giọng nói bên ngoài. File tải lên tạm thời được xóa sau khi hoàn tất hoặc lỗi; TXT và SRT lưu trong thư mục đã chọn. Khi chạy lần đầu, mô hình Whisper sẽ được tải từ Internet vào cache. Hiện mỗi lần chỉ thực hiện một tác vụ văn bản. Nếu tắt phần mềm giữa chừng, tác vụ này chưa thể tiếp tục.
 
 Cập nhật: dừng Flask cũ bằng Ctrl+C, chạy `git pull origin main`, `py -m pip install -r requirements-transcription.txt` và `py web_app.py`.
+
+
+## Mở phần mềm bằng biểu tượng trên Desktop (Windows)
+
+Sau khi `git pull origin main`, mở thư mục dự án `VideoSaverVN-Online` bằng File Explorer, rồi **nhấp đúp `Create-Desktop-Icon.cmd` đúng một lần**. Script tạo shortcut **VideoSaver VN** ngoài Desktop trỏ đến `Start-VideoSaverVN.cmd` bên trong thư mục hiện tại.
+
+Từ lần sau, nhấp đúp **VideoSaver VN** ngoài Desktop sẽ chạy `web_app.py` và tự mở trang localhost trên trình duyệt. Giữ cửa sổ dòng lệnh mở để server tiếp tục hoạt động; đóng bằng Ctrl+C hoặc đóng cửa sổ đó. Nếu ứng dụng đã chạy, không cần nhấp lần nữa — chỉ mở tab web hiện tại.
+
+Không cần cài lại Python/FFmpeg nếu đã cài xong. **Không di chuyển hoặc xóa thư mục dự án** sau khi tạo shortcut; nếu chuyển vị trí thư mục, chạy lại `Create-Desktop-Icon.cmd` từ thư mục mới. Script không yêu cầu quyền Administrator.
