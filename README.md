@@ -38,3 +38,22 @@ py -m pip install -U "yt-dlp[default]"
 Phân tích video cần kết nối Internet và nguồn được yt-dlp hỗ trợ; có những video không thể phân tích hoặc tải. Chỉ tải nội dung sở hữu hoặc được phép lưu; không hỗ trợ DRM, nội dung riêng tư hay vượt quyền truy cập.
 
 Bản này **chưa kiểm thử tải thực tế trên máy Windows của người dùng**. Hãy báo lỗi kèm nhật ký ở trang web nếu gặp sự cố.
+
+
+## Lấy văn bản từ video (v3.1)
+
+Trên giao diện, dán URL → chọn **Lấy văn bản từ video** → ngôn ngữ và phương pháp → **Lấy văn bản**.
+
+- **Chỉ phụ đề**: lấy subtitle do người đăng cung cấp hoặc subtitle tự động. Không yêu cầu Whisper.
+- **AI (CPU)**: tải luồng âm thanh rồi chạy mô hình faster-whisper \`small\` ở chế độ int8. File TXT (văn bản) và SRT (phụ đề có thời gian) nằm ở thư mục lưu đã chọn.
+- **Tự động**: dùng phụ đề trước, nếu không có thì chuyển sang AI. Nếu chưa cài faster-whisper, sẽ hiển thị thông báo cài đặt rõ ràng.
+
+Để dùng nhận dạng lời nói bằng AI, cài thêm:
+
+\`\`\`powershell
+py -m pip install -r requirements-transcription.txt
+\`\`\`
+
+Mô hình Whisper được tải về lần đầu khi sử dụng, sau đó lưu cache trên máy. CPU có thể xử lý chậm với video dài. Cần FFmpeg và kết nối Internet khi tải video hoặc tải mô hình lần đầu. Văn bản do AI tạo có thể sai, đặc biệt với âm thanh nhiễu hoặc tên riêng.
+
+**Chú ý:** Việc lấy văn bản hiện xử lý một video mỗi lần, và tác vụ sẽ không tự tiếp tục nếu bạn tắt ứng dụng giữa chừng. Hàng đợi tải video thông thường vẫn hoạt động độc lập. Những video không có lời nói hoặc không có phụ đề không thể tạo ra văn bản có ý nghĩa.
