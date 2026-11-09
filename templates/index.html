@@ -65,6 +65,15 @@ pre{white-space:pre-wrap;word-break:break-word;color:#9cb0d4;font-size:11px;max-
 <div><label for="folder">Thư mục lưu về máy</label><div class="folderrow"><input id="folder" value="{{ folder }}" spellcheck="false"><button id="pick" title="Chọn thư mục trên máy">📁 Chọn</button></div><p class="notice">Bạn cũng có thể nhập trực tiếp đường dẫn thư mục Windows.</p></div></div>
 <div class="actions"><button class="primary" id="add">＋ Thêm vào hàng đợi</button><button id="open">📂 Mở thư mục lưu</button></div>
 </section>
+<section class="card" id="textPanel">
+<div class="sectionhead"><h2>📝 Lấy văn bản từ video</h2><span class="muted">Xuất TXT và SRT</span></div>
+<p class="notice" style="margin:0 0 16px">Sử dụng liên kết ở phía trên. Ưu tiên lấy phụ đề có sẵn; nếu không có, có thể dùng AI để nhận dạng lời nói trên CPU.</p>
+<div class="grid" style="margin-top:0">
+<div><label for="textmode">Phương pháp</label><select id="textmode"><option value="auto">Tự động: phụ đề trước, AI nếu cần</option><option value="subtitles">Chỉ lấy phụ đề có sẵn (nhanh)</option><option value="speech">Nhận dạng lời nói bằng AI (CPU)</option></select></div>
+<div><label for="textlang">Ngôn ngữ</label><select id="textlang"><option value="vi">Tiếng Việt</option><option value="en">Tiếng Anh</option><option value="auto">Tự nhận diện / có sẵn</option></select></div>
+</div><div class="actions"><button class="primary" id="makeText">✦ Lấy văn bản</button><span id="textStatus" class="notice" style="margin:10px 0">Chưa có tác vụ</span></div>
+<div id="textResults" class="notice"></div>
+</section>
 <section class="card" id="tasksPanel"><div class="sectionhead"><h2>Danh sách tải xuống <span class="muted" id="taskCount"></span></h2><div class="tabs"><button id="allTab" class="active">Tất cả</button><button id="activeTab">Đang tải</button><button id="doneTab">Hoàn tất</button></div></div><div id="tasks"></div></section>
 <details><summary>Nhật ký kỹ thuật / Chi tiết lỗi</summary><pre id="logs">Chưa có hoạt động.</pre></details>
 <p class="footer">VideoSaver VN chạy trên localhost. Không hỗ trợ DRM hay truy cập trái phép. Nếu nguồn đổi cấu trúc, hãy cập nhật yt-dlp.</p>
@@ -92,5 +101,24 @@ const labels={waiting:"Đang chờ",downloading:"Đang tải",processing:"Đang 
 function renderTasks(){const box=$("tasks");box.replaceChildren();const selected=latest.filter(t=>filter==="all"||filter==="active"&&["waiting","downloading","processing"].includes(t.status)||filter==="done"&&["done","failed","cancelled","interrupted"].includes(t.status));$("taskCount").textContent="("+latest.length+")";if(!selected.length){const z=el("div","empty");z.append(el("div","", "▤"),el("strong","",filter==="all"?"Chưa có video nào":"Không có lượt tải ở mục này"),el("span","", "Các video bạn thêm sẽ xuất hiện ở đây."));box.append(z);return}
 for(const t of selected){const card=el("div","task");const icon=el("div","taskicon");const img=safeImage(t.thumbnail);if(img){const im=el("img");im.src=img;im.alt="";icon.append(im)}else icon.textContent="▶";const center=el("div");const title=el("div","tasktitle",t.title||t.url);title.title=t.title||t.url;const speed=t.speed?t.speed+" MB/s · ":"";const eta=Number.isFinite(t.eta)?"còn "+Math.round(t.eta)+"s · ":"";const meta=el("div","taskmeta",(labels[t.status]||t.status)+" · "+t.quality+" · "+speed+eta+(t.error||t.created||""));center.append(title,meta);if(["downloading","processing","done"].includes(t.status)){const p=el("div","progress");const f=el("div");f.style.width=(t.progress||0)+"%";p.append(f);center.append(p)}const right=el("div","taskright");right.append(el("span","tag",(t.progress||0).toFixed(0)+"%"));if(["waiting","downloading","processing"].includes(t.status)){const cancel=el("button","","Hủy");cancel.onclick=async()=>{try{await api("cancel",{id:t.id});refresh()}catch(e){message(e.message,true)}};right.append(cancel)}card.append(icon,center,right);box.append(card)}}
 async function refresh(){try{const d=await api("state");latest=d.tasks;$("logs").textContent=d.logs.length?d.logs.join("\n"):"Chưa có hoạt động.";renderTasks();$("health").textContent=d.ffmpeg?"● FFmpeg sẵn sàng":"⚠ Chưa tìm thấy FFmpeg";$("health").style.color=d.ffmpeg?"#70e1b1":"#ffba78"}catch{$("health").textContent="Không kết nối máy chủ"}}
+
+let lastTextId=null;
+$("makeText").onclick=async()=>{try{
+const url=$("url").value.trim();if(!url){message("Hãy nhập liên kết video ở trên trước.",true);return}
+const r=await api("transcribe",{url,folder:$("folder").value,mode:$("textmode").value,language:$("textlang").value});
+lastTextId=r.id;$("textStatus").textContent="Đã bắt đầu xử lý";$("makeText").disabled=true;$("textResults").textContent="";
+}catch(e){$("textStatus").textContent=e.message}};
+async function refreshText(){try{
+const r=await api("transcribe-status");const current=r.jobs.find(x=>x.id===lastTextId)||r.jobs[r.jobs.length-1];
+if(!current)return;
+lastTextId=current.id;$("textStatus").textContent=current.status+(current.progress>0?" · "+current.progress+"%":"");
+$("makeText").disabled=!current.finished;
+const results=$("textResults");results.replaceChildren();
+if(current.note)results.append(el("div","",current.note));
+if(current.error)results.append(el("div","notice error",current.error));
+if(current.txt){results.append(el("div","", "✓ Văn bản TXT: "+current.txt),el("div","", "✓ Phụ đề SRT: "+current.srt));}
+}catch(e){$("textStatus").textContent="Không đọc được trạng thái nhận dạng"}}
+setInterval(refreshText,1400);refreshText();
+
 refresh();setInterval(refresh,1250);
 </script></body></html>
